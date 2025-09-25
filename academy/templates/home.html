@@ -1,0 +1,374 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Prathibha College | PSC Coaching Center</title>
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+  <style>
+    :root {
+      --primary-navy: #1a3e66;
+      --accent-gold: #d4a017;
+      --background-light: #f8f9fa;
+      --text-charcoal: #2c3e50;
+      --hover-navy: #16375b;
+      --hover-gold: #c49b0f;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding-top: 80px;
+      background: var(--background-light);
+      color: var(--text-charcoal);
+    }
+
+    /* Navbar */
+    .top-header {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background: linear-gradient(90deg, var(--primary-navy) 60%, var(--primary-navy) 100%);
+      box-shadow: 0 4px 12px rgba(26,62,102,0.11);
+      padding: 0.8rem 2rem;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .logo {
+      height: 58px;
+      width: auto;
+      filter: drop-shadow(0 2px 8px rgba(26,62,102,0.2));
+    }
+    .navbar-nav .nav-link {
+      margin: 0 8px;
+    }
+    .nav-link, .btn-glass {
+      border-radius: 30px;
+      padding: 6px 20px;
+      font-weight: 600;
+      font-size: 1rem;
+      border: 1px solid rgba(255,255,255,0.22);
+      background: rgba(255,255,255,0.10);
+      color: #fff;
+      transition: all 0.3s;
+      text-decoration: none;
+      letter-spacing: 0.7px;
+    }
+    .nav-link:hover, .btn-glass:hover {
+      background: var(--primary-navy);
+      color: var(--hover-gold);
+      box-shadow: 0 2px 18px rgba(26,62,102,0.13);
+      border-color: var(--hover-gold);
+    }
+    .dropdown-menu { background: #16375b; border: none; }
+    .dropdown-item { color: #fff; }
+    .dropdown-item:hover { background: #1f4a75; color: var(--hover-gold); }
+
+    /* Hero */
+    .hero {
+      background: url("{% static 'images/campus_bg.jpg' %}") center/cover no-repeat;
+      min-height: 75vh;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      position: relative;
+    }
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: rgba(26,62,102, 0.7);
+    }
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      padding: 0 20px;
+      max-width: 750px;
+    }
+    .hero h1 { font-size: 3rem; font-weight: 900; margin-bottom: 12px; letter-spacing: 2px; }
+    .hero p { font-size: 1.3rem; margin-bottom: 28px; opacity: 0.96; }
+    .btn-cta {
+      background: var(--accent-gold);
+      color: var(--primary-navy);
+      border-radius: 24px;
+      padding: 10px 30px;
+      font-weight: bold;
+      font-size: 1.05rem;
+      border: none;
+      text-transform: uppercase;
+      transition: all 0.2s;
+      box-shadow: 0 2px 12px rgba(26,62,102,0.09);
+    }
+    .btn-cta:hover { background: #e6c35b; color: var(--primary-navy); }
+
+    /* Section Titles */
+    .section-title {
+      text-align: center;
+      font-size: 2.3rem;
+      font-weight: bold;
+      margin-bottom: 38px;
+      letter-spacing: 1px;
+      color: var(--text-charcoal);
+      position: relative;
+    }
+    .section-title::after {
+      content: "";
+      display: block;
+      width: 70px;
+      height: 4px;
+      background: var(--accent-gold);
+      margin: 14px auto 0;
+      border-radius: 2px;
+    }
+    .section-sub {
+      text-align: center;
+      color: var(--text-charcoal);
+      margin-bottom: 28px;
+      font-size: 1.07rem;
+      font-weight: 400;
+      opacity: 0.78;
+    }
+    section { padding: 65px 18px; }
+
+    /* Program Highlights */
+    .program-list {
+      display: flex;
+      gap: 32px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 26px;
+    }
+    .program-item {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 1px 16px rgba(26,62,102,0.06);
+      padding: 24px 30px;
+      min-width: 270px;
+      max-width: 350px;
+      text-align: left;
+      margin-bottom: 18px;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .program-item:hover { transform: translateY(-6px); box-shadow: 0 6px 20px rgba(26,62,102,0.12); }
+    .program-item h4 { font-weight: 700; color:#1f4a75; margin-bottom: 8px; }
+    .program-item p { font-size: 1.02rem; opacity:0.87; margin:0; }
+
+    /* Faculty */
+    .faculty-row {
+      display: flex;
+      gap: 28px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom:28px;
+    }
+    .faculty-card {
+      background: #e6ecf5;
+      border-radius: 12px;
+      padding: 22px 18px;
+      min-width: 220px;
+      text-align: center;
+      box-shadow: 0 2px 9px rgba(26,62,102,0.06);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .faculty-card:hover { transform: scale(1.05); box-shadow: 0 6px 18px rgba(26,62,102,0.15); }
+    .faculty-card img {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      margin-bottom: 10px;
+      object-fit: cover;
+    }
+    .faculty-card h5 { font-size:1.11rem; color:#16375b; margin-bottom:6px;}
+    .faculty-card span { font-size:0.96rem; color:#475a73;}
+
+    /* Testimonials */
+    .testimonial-row {
+      display: flex;
+      gap: 24px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .testimonial-card {
+      background: #fff7d6;
+      border-left: 7px solid var(--accent-gold);
+      border-radius: 8px;
+      padding: 22px 28px;
+      max-width: 340px;
+      font-style: italic;
+      color: #16375b;
+      box-shadow:0 0 9px rgba(26,62,102,0.07);
+    }
+    .testimonial-card .name {
+      display: block;
+      margin-top:12px;
+      font-weight: bold;
+      color: #1f4a75;
+      font-size:1.04rem;
+    }
+
+    /* Gallery */
+    .gallery img {
+      width: 100%;
+      border-radius: 10px;
+      transform: scale(1);
+      transition: transform 0.3s, box-shadow 0.3s;
+      box-shadow: 0 2px 16px rgba(26,62,102,0.13);
+    }
+    .gallery img:hover { transform: scale(1.04); box-shadow: 0 6px 25px rgba(26,62,102,0.21); }
+
+    /* Footer */
+    footer {
+      background: var(--primary-navy);
+      color: #f0e6b8;
+      padding: 20px 0;
+      font-size: 1rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 800px) {
+      .program-list, .faculty-row, .testimonial-row { flex-direction: column; gap: 0; }
+      .top-header { padding: 1rem; flex-direction: column; align-items: flex-start; }
+      .section-title { font-size: 2rem; }
+      .hero h1 { font-size: 2.1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <header class="top-header">
+    <img src="{% static 'images/logo_c.png' %}" alt="Prathibha College Logo" class="logo" />
+    <nav>
+      <ul class="navbar-nav flex-row">
+        <li class="nav-item dropdown">
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">Admissions</a></li>
+          </ul>
+        </li>
+        <li class="nav-item"><a class="nav-link" href="#faculty">Faculty</a></li>
+        <li class="nav-item"><a class="nav-link" href="#about">About Us</a></li>
+        <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+    <div class="btn-group ms-3">
+      <a href="{% url 'login' %}" class="btn-glass">Login</a>
+      <a href="{% url 'member_registration' %}" class="btn-glass">Apply Now</a>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-content">
+      <h1>Empowering Aspirants Since 1998</h1>
+      <p>At <strong>Prathibha College</strong>, we prepare leaders and civil servants for tomorrow. Achieve more with focused coaching and personal mentoring.</p>
+      <a href="#contact" class="btn-cta mt-2">Join Our Community</a>
+    </div>
+  </section>
+
+  <!-- Programs -->
+  <section id="programs">
+    <h2 class="section-title">Our Programs</h2>
+    <div class="section-sub">Diverse, rigorous, and proven courses for every PSC dream</div>
+    <div class="program-list">
+      {% for program in programs %}
+      <div class="program-item">
+        <h4>{{ program.title }}</h4>
+        <p>{{ program.description }}</p>
+      </div>
+      {% empty %}
+      <p class="text-center">Programs will be updated soon.</p>
+      {% endfor %}
+    </div>
+  </section>
+
+  <!-- Faculty -->
+  <section id="faculty">
+    <h2 class="section-title">Meet Our Faculty</h2>
+    <div class="faculty-row">
+      {% for f in faculty %}
+      <div class="faculty-card">
+        <img src="{{ f.photo.url }}" alt="{{ f.name }}">
+        <h5>{{ f.name }}</h5>
+        <span>{{ f.role }}</span>
+      </div>
+      {% empty %}
+      <p class="text-center">Faculty details coming soon.</p>
+      {% endfor %}
+    </div>
+  </section>
+
+  <!-- About Us -->
+  <section id="about">
+    <h2 class="section-title">About Us</h2>
+    <div class="container">
+      <div class="section-sub">
+        Where tradition meets innovation in education
+      </div>
+      <p class="text-center">
+        Founded in 1998, Prathibha College has built a legacy of academic excellence and ethical leadership.<br />
+        Our modern campus in Poovattuparamba, Kozhikode, is home to state-of-the-art classrooms, a committed faculty, and an enthusiastic student body. We believe in holistic growth—academic, professional, and personal. Thousands of students have secured top ranks in PSC and other competitive exams, guided by our expert mentors.<br /><br />
+        Success is not an accident; it's the result of dedication, mentoring, and continuous progress. Join us on a proven path to achievement.
+      </p>
+    </div>
+  </section>
+
+  <!-- Testimonials -->
+  <section id="testimonials">
+    <h2 class="section-title">What Our Students Say</h2>
+    <div class="testimonial-row">
+      {% for t in testimonials %}
+      <div class="testimonial-card">
+        "{{ t.message }}"
+        <div class="name">— {{ t.student }}</div>
+      </div>
+      {% empty %}
+      <p class="text-center">Testimonials will appear here soon.</p>
+      {% endfor %}
+    </div>
+  </section>
+
+  <!-- Contact Info -->
+  <section id="contact">
+    <h2 class="section-title">Contact Us</h2>
+    <div class="container text-center">
+      <p class="contact-details">
+        <strong>Address:</strong> Poovattuparamba, Kozhikode<br>
+        <strong>Phone:</strong> 8943313254 &nbsp;|&nbsp; 9562020997<br>
+        <strong>Email:</strong> <a href="mailto:info@prathibhacollege.com">info@prathibhacollege.com</a>
+      </p>
+    </div>
+  </section>
+
+  <!-- Gallery -->
+  <section id="gallery">
+    <h2 class="section-title">Campus & Events</h2>
+    <div class="container">
+      <div class="row g-4 gallery">
+        {% for g in gallery %}
+        <div class="col-md-4">
+          <img src="{{ g.image.url }}" alt="{{ g.caption }}">
+        </div>
+        {% empty %}
+        <p class="text-center">Gallery will be updated soon.</p>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="text-center">
+    &copy; {{ now|date:"Y" }} <strong>Prathibha College</strong>. All Rights Reserved.
+  </footer>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

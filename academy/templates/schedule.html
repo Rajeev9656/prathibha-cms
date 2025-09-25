@@ -1,0 +1,217 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Schedule Management - Prathibha College</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f4f6f8;
+      --card: #ffffff;
+      --primary: #0d3b66;
+      --secondary: #5d6fbd;
+      --muted: #6b7c86;
+    }
+    body {
+      background: var(--bg);
+      font-family: 'Segoe UI', Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      color: var(--primary);
+    }
+
+    /* Navbar */
+    .navbar-custom {
+      background: var(--primary);
+      color: #fff;
+      padding: 12px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.15);
+    }
+    .navbar-brand {
+      display: flex;
+      align-items: center;
+      font-weight: 700;
+      font-size: 1.3rem;
+      color: #fff;
+      text-decoration: none;
+      gap: 10px;
+    }
+    .navbar-brand img {
+      height: 42px;
+    }
+    .navbar-actions a {
+      background: var(--secondary);
+      border: none;
+      padding: 8px 18px;
+      color: #fff;
+      font-weight: 600;
+      border-radius: 6px;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+    .navbar-actions a:hover {
+      background: #4b59a6;
+      transform: scale(1.05);
+    }
+
+    /* Page container */
+    .container {
+      max-width: 950px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    /* Card sections */
+    .card {
+      background: var(--card);
+      border-radius: 14px;
+      padding: 25px 22px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+      margin-bottom: 25px;
+      transition: transform 0.2s ease;
+    }
+    .card:hover {
+      transform: translateY(-4px);
+    }
+    .card h2 {
+      font-weight: 700;
+      margin-bottom: 20px;
+      color: var(--primary);
+      font-size: 1.4rem;
+    }
+
+    /* Forms */
+    label {
+      font-weight: 600;
+    }
+    .form-control, .form-select {
+      border-radius: 8px;
+      border: 1px solid #d0d6dc;
+      padding: 10px 12px;
+    }
+    .form-control:focus, .form-select:focus {
+      border-color: var(--secondary);
+      box-shadow: 0 0 0 0.2rem rgba(93,111,189,0.25);
+    }
+
+    /* Buttons */
+    .btn-primary {
+      background: var(--primary);
+      border: none;
+      padding: 10px 20px;
+      color: #fff;
+      font-weight: 600;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+    .btn-primary:hover {
+      background: #093052;
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar-custom">
+    <a href="#" class="navbar-brand">
+      <img src="{% static 'images/logo_c.png' %}" alt="Prathibha Logo">
+      Prathibha College - Schedule Management
+    </a>
+    <div class="navbar-actions">
+      <a href="{% url 'tutor_dashboard' %}">Back</a>
+    </div>
+  </nav>
+
+  <main class="container">
+
+    <!-- Add Class -->
+    <div class="card">
+      <h2>➕ Add New Class</h2>
+      <form method="POST" action="{}">
+        {% csrf_token %}
+        <div class="mb-3">
+          <label for="batch" class="form-label">Batch</label>
+          <select id="batch" name="batch" class="form-select" required>
+            <option value="">Select Batch</option>
+            <option value="Day Batch">Day Batch</option>
+            <option value="Sunday Batch">Sunday Batch</option>
+            <option value="Overseer (Sunday Only)">Overseer</option>
+            <option value="Night Batch">Night Batch</option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label for="topic" class="form-label">Topic</label>
+          <input type="text" id="topic" name="topic" class="form-control" placeholder="Enter topic" required>
+        </div>
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label for="date" class="form-label">Date</label>
+            <input type="date" id="date" name="date" class="form-control" required>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label for="time" class="form-label">Time</label>
+            <input type="time" id="time" name="time" class="form-control" required>
+          </div>
+        </div>
+        <div class="mb-3">
+          <label for="room" class="form-label">Room / Link</label>
+          <input type="text" id="room" name="room" class="form-control" placeholder="Enter room number or Zoom link">
+        </div>
+        <button type="submit" class="btn btn-primary">Add Class</button>
+      </form>
+    </div>
+
+    <!-- Add Exam -->
+    <div class="card">
+      <h2>📝 Add New Exam</h2>
+      <form method="POST" action="{}">
+        {% csrf_token %}
+        <div class="mb-3">
+          <label for="subject" class="form-label">Subject</label>
+          <input type="text" id="subject" name="subject" class="form-control" placeholder="Enter subject" required>
+        </div>
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label for="exam_date" class="form-label">Date</label>
+            <input type="date" id="exam_date" name="date" class="form-control" required>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label for="exam_time" class="form-label">Time</label>
+            <input type="time" id="exam_time" name="time" class="form-control" required>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Add Exam</button>
+      </form>
+    </div>
+
+    <!-- Add Event -->
+    <div class="card">
+      <h2>📢 Add New Event / Announcement</h2>
+      <form method="POST" action="{}">
+        {% csrf_token %}
+        <div class="mb-3">
+          <label for="title" class="form-label">Title</label>
+          <input type="text" id="title" name="title" class="form-control" placeholder="Enter title" required>
+        </div>
+        <div class="mb-3">
+          <label for="description" class="form-label">Description</label>
+          <textarea id="description" name="description" class="form-control" rows="3" placeholder="Enter description"></textarea>
+        </div>
+        <div class="mb-3">
+          <label for="event_date" class="form-label">Date</label>
+          <input type="date" id="event_date" name="date" class="form-control" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Add Event</button>
+      </form>
+    </div>
+
+  </main>
+
+</body>
+</html>

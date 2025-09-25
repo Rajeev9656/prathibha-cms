@@ -1,0 +1,232 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Members List</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f4f6f8;
+      --card: #000000; /* Table background black */
+      --primary: #0d3b66;
+      --secondary: #09123a;
+      --muted: #ffffff; /* Table text white */
+    }
+
+    body { 
+      background: var(--bg); 
+      font-family: 'Segoe UI', Arial, sans-serif; 
+      color: var(--primary);
+      padding-bottom: 50px;
+    }
+
+    /* Navbar */
+    .navbar-custom {
+      background: var(--primary);
+      padding: 12px 20px;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.15);
+    }
+    .navbar-custom .navbar-brand {
+      display: flex;
+      align-items: center;
+      color: #fff;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 1.4rem;
+    }
+    .navbar-custom .navbar-brand img {
+      height: 42px;
+      margin-right: 10px;
+    }
+
+    .back-link {
+      display: inline-block;
+      margin: 18px 20px;
+      font-size: 1.05rem;
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .back-link:hover { text-decoration: underline; }
+
+    h1 { 
+      text-align: center; 
+      margin: 0 0 25px 0; 
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    /* Filter/Search Box */
+    .filter-box {
+      background: #fff;
+      padding: 25px 30px;
+      border-radius: 14px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+      margin-bottom: 20px;
+    }
+    .filter-box label {
+      margin-bottom: 6px;
+      font-weight: 600;
+      color: var(--secondary);
+    }
+
+    /* Table */
+table {
+  width: 95%;
+  margin: auto;
+  border-collapse: collapse;
+  background-color: #000000; /* Black background for table */
+  color: #ffffff;            /* White text */
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* Table header */
+th {
+  background-color: #000000; /* Black header */
+  color: #ffffff;            /* White text */
+  text-align: center;
+  padding: 12px;
+  font-weight: 600;
+}
+
+/* Table body */
+td {
+  padding: 12px;
+  border: 1px solid #333;   /* Dark border for separation */
+  text-align: center;
+  color: #ffffff;            /* White text in cells */
+}
+
+/* Row hover effect */
+tr:hover {
+  background-color: #1a1a1a; /* Dark gray on hover */
+}
+
+    /* Buttons */
+    .btn-warning {
+      background-color: #f0ad4e;
+      border: none;
+      font-weight: 500;
+      border-radius: 6px;
+      padding: 6px 14px;
+      color: #fff;
+    }
+    .btn-danger {
+      background-color: #d9534f;
+      border: none;
+      font-weight: 500;
+      border-radius: 6px;
+      padding: 6px 14px;
+      color: #fff;
+    }
+    .btn-warning:hover { background-color: #ec971f; }
+    .btn-danger:hover { background-color: #c9302c; }
+
+    select { border-radius: 8px; padding: 4px 6px; color: #000; }
+
+    @media print {
+      .filter-box, h1, .navbar-custom, .back-link { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar-custom">
+    <a href="#" class="navbar-brand">
+      <img src="{% static 'images/logo_c.png' %}" alt="Logo">
+      Prathibha College - Registered Students
+    </a>
+  </nav>
+
+  <!-- Back link -->
+  <a href="{% url 'tutor_dashboard' %}" class="back-link">&larr; Back</a>
+
+  <h1>Registered Students</h1>
+
+  <!-- Filter/Search -->
+  <div class="filter-box container">
+    <div class="row g-3 align-items-center justify-content-center">
+      <div class="col-md-4 col-sm-12">
+        <label for="nameSearch">Search by Name</label>
+        <input type="text" id="nameSearch" class="form-control" placeholder="Enter name" onkeyup="filterMembers()">
+      </div>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="table-responsive">
+    <table id="membersTable" class="table table-bordered table-striped">
+      <thead>
+        <tr>
+          <th>Full Name</th>
+          <th>Age</th>
+          <th>DOB</th>
+          <th>Phone</th>
+          <th>Email</th>
+          <th>Place</th>
+          <th>Batch</th>
+          <th>Date Joined</th>
+          <th>Fees</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% if members.exists %}
+          {% for member in members %}
+          <tr>
+            <td>{{ member.full_name }}</td>
+            <td>{{ member.age }}</td>
+            <td>{{ member.dob|date:"Y-m-d" }}</td>
+            <td>{{ member.phone }}</td>
+            <td>{{ member.email }}</td>
+            <td>{{ member.place }}</td>
+            <td>{{ member.batch }}</td>
+            <td>{{ member.date_joined|date:"Y-m-d" }}</td>
+            <td>
+              {% if request.session.tutor_logged_in %}
+                <form action="{% url 'update_fees' member.id %}" method="POST">
+                  {% csrf_token %}
+                  <select name="fees_paid" onchange="this.form.submit()">
+                    <option value="True" {% if member.fees_paid %}selected{% endif %}>Paid</option>
+                    <option value="False" {% if not member.fees_paid %}selected{% endif %}>Not Paid</option>
+                  </select>
+                </form>
+              {% else %}
+                {{ member.fees_paid|yesno:"Paid,Not Paid" }}
+              {% endif %}
+            </td>
+            <td>
+              <a href="{% url 'edit_member' member.id %}" class="btn btn-sm btn-warning">Edit</a>
+              <a href="{% url 'delete_member' member.id %}" class="btn btn-sm btn-danger"
+                 onclick="return confirm('Are you sure you want to delete {{ member.full_name }}?');">
+                 Delete
+              </a>
+            </td>
+          </tr>
+          {% endfor %}
+        {% else %}
+          <tr>
+            <td colspan="10" class="text-center">No members registered yet.</td>
+          </tr>
+        {% endif %}
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    function filterMembers() {
+      const nameFilter = document.getElementById("nameSearch").value.toLowerCase();
+      const rows = document.querySelectorAll("#membersTable tbody tr");
+      rows.forEach(row => {
+        const firstCell = row.querySelector("td:first-child");
+        if (!firstCell) return;
+        const name = firstCell.innerText.toLowerCase();
+        row.style.display = name.includes(nameFilter) ? "" : "none";
+      });
+    }
+  </script>
+</body>
+</html>

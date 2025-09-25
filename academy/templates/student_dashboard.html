@@ -1,0 +1,223 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Advanced Student Dashboard</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(160deg, #f0f4f8, #d9e2ec);
+    color: #293656;
+    overflow-x: hidden;
+}
+.navbar-custom {
+    background: linear-gradient(90deg, #0d3b66, #183a47);
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 4px 18px rgba(18,69,89,0.2);
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1001;
+    
+}
+.navbar-custom .logo { height:50px; margin-right:18px; background:#fff; border-radius:12px; padding:5px 12px; box-shadow:0 3px 12px rgba(18,69,89,0.15); transition: transform 0.3s; }
+.navbar-custom .logo:hover { transform: scale(1.05); }
+.navbar-custom .navbar-title {
+    color: #ffffff; /* changed to white */
+    font-size:1.4rem;
+    font-weight:700;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.4); /* optional for better contrast */
+}
+.navbar-custom .logout-btn { margin-left:auto; color:#124559; font-weight:700; border-radius:24px; background:#ffc107; padding:6px 20px; transition: all 0.3s; }
+.navbar-custom .logout-btn:hover { transform: scale(1.05); box-shadow:0 4px 12px rgba(255,193,7,0.3); }
+
+.sidebar {
+    height: 100vh;
+    width: 250px;
+    background: linear-gradient(185deg,#0d3b66 65%,#183a47 100%);
+    color: #fff;
+    position: fixed;
+    top: 68px;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 3px 18px rgba(18,69,89,0.15);
+    border-top-right-radius: 18px;
+    padding-top: 15px;
+}
+.sidebar a {
+    padding: 14px 28px;
+    color: #fff;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    font-weight: 600;
+    border-radius: 0 30px 30px 0;
+    background: rgba(255,255,255,0.07);
+    margin: 6px 0;
+    transition: all 0.3s;
+    font-size: 1.07rem;
+    gap: 12px;
+    cursor: pointer;
+}
+.sidebar a:hover, .sidebar a.active { background:#ffc107; color:#124559; font-weight:700; box-shadow:0 4px 20px rgba(255,193,7,0.2); }
+
+.main { margin-left: 260px; margin-top: 80px; padding: 30px 32px; min-height: 100vh; transition: margin-left 0.3s; }
+.section { display: none; animation: fadeInUp 0.5s forwards; }
+.section.active { display: block; }
+
+.header { background: linear-gradient(135deg, #ffffff, #ffeaba); padding: 22px 20px; border-radius: 16px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 3px 18px rgba(18,69,89,0.12);}
+.header h1 { font-size: 2rem; font-weight: 900; color: #124559; margin: 0; letter-spacing: 1.1px; }
+
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 28px; }
+.card { background: #fff; padding: 25px 22px; border-radius: 16px; box-shadow: 0 6px 24px rgba(18,69,89,0.08); border-left: 8px solid #124559; transition: all 0.3s; }
+.card h3 { margin-top: 0; color: #183a47; font-size: 1.2rem; font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; gap: 10px; }
+.card ul { padding-left:24px; margin:0; }
+.card ul li { margin-bottom:8px; font-size:1rem; color:#293656; }
+.card:hover { border-left:8px solid #ffc107; transform: translateY(-5px); box-shadow: 0 10px 28px rgba(18,69,89,0.15); }
+
+/* Progress bars */
+.progress { height: 20px; border-radius: 12px; }
+.progress-bar { border-radius: 12px; }
+
+/* Animations */
+@keyframes fadeInUp { to { opacity:1; transform:translateY(0); } }
+
+@media (max-width:700px){.sidebar { position:relative; width:100vw; height:auto; flex-direction:row; border-radius:0 0 18px 18px; top:58px; box-shadow:none; padding:5px 0;} .sidebar a { flex:1; justify-content:center; margin:0 4px; padding:10px 5px; font-size:0.95rem;} .main{margin-left:0;margin-top:76px;} .cards{grid-template-columns:1fr;gap:18px;}}
+</style>
+</head>
+<body>
+<!-- Navbar -->
+<div class="navbar-custom">
+    <img src="{% static 'images/logo_c.png' %}" alt="Logo" class="logo">
+    <span class="navbar-title">Prathibha College - Student Dashboard</span>
+    <a href="{% url 'home' %}" class="btn logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+</div>
+
+<!-- Sidebar -->
+<div class="sidebar">
+    <a class="active" onclick="showSection('home')"><i class="fas fa-home"></i> Home</a>
+    <a onclick="showSection('courses')"><i class="fas fa-book"></i> Courses</a>
+    <a onclick="showSection('grades')"><i class="fas fa-chart-line"></i> Grades</a>
+    <a onclick="showSection('assignments')"><i class="fas fa-tasks"></i> Assignments</a>
+    <a onclick="showSection('profile')"><i class="fas fa-user"></i> Profile</a>
+</div>
+
+<div class="main">
+    <!-- Home -->
+    <div id="home" class="section active">
+        <div class="header"><h1>Welcome to Prathibha College</h1></div>
+        <div class="cards">
+            <div class="card">
+                <h3><i class="fas fa-book-open"></i> My Courses</h3>
+                <ul>
+                    <li>Mathematics <div class="progress"><div class="progress-bar bg-success" style="width: 80%;">80%</div></div></li>
+                    <li>Physics <div class="progress"><div class="progress-bar bg-info" style="width: 65%;">65%</div></div></li>
+                    <li>Computer Science <div class="progress"><div class="progress-bar bg-warning" style="width: 90%;">90%</div></div></li>
+                </ul>
+            </div>
+            <div class="card">
+                <h3><i class="fas fa-chart-line"></i> Grades Overview</h3>
+                <canvas id="gradesChart" style="width:100%;height:200px;"></canvas>
+            </div>
+            <div class="card">
+                <h3><i class="fas fa-tasks"></i> Upcoming Assignments</h3>
+                <ul>
+                    <li>Math Homework <span class="badge bg-danger">Due Soon</span></li>
+                    <li>CS Project <span class="badge bg-warning text-dark">Pending</span></li>
+                    <li>Physics Lab <span class="badge bg-success">Submitted</span></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Courses Section -->
+    <div id="courses" class="section">
+        <div class="header"><h1>All Courses</h1></div>
+        <input type="text" id="courseSearch" class="form-control mb-3" placeholder="Search courses..." onkeyup="filterCourses()">
+        <div class="cards" id="coursesList">
+            <div class="card"><h3><i class="fas fa-book"></i> Mathematics</h3></div>
+            <div class="card"><h3><i class="fas fa-book"></i> Physics</h3></div>
+            <div class="card"><h3><i class="fas fa-book"></i> Computer Science</h3></div>
+            <div class="card"><h3><i class="fas fa-book"></i> Chemistry</h3></div>
+            <div class="card"><h3><i class="fas fa-book"></i> Biology</h3></div>
+        </div>
+    </div>
+
+    <!-- Grades Section -->
+    <div id="grades" class="section">
+        <div class="header"><h1>Grades</h1></div>
+        <div class="cards">
+            <div class="card"><h3><i class="fas fa-chart-line"></i> Mathematics</h3><p>90%</p></div>
+            <div class="card"><h3><i class="fas fa-chart-line"></i> Physics</h3><p>85%</p></div>
+            <div class="card"><h3><i class="fas fa-chart-line"></i> Computer Science</h3><p>95%</p></div>
+        </div>
+    </div>
+
+    <!-- Assignments Section -->
+    <div id="assignments" class="section">
+        <div class="header"><h1>Assignments</h1></div>
+        <div class="cards">
+            <div class="card"><h3><i class="fas fa-tasks"></i> Math Homework</h3><p>Due: 20th Sep</p></div>
+            <div class="card"><h3><i class="fas fa-tasks"></i> CS Project</h3><p>Due: 25th Sep</p></div>
+        </div>
+    </div>
+
+    <!-- Profile Section -->
+    <div id="profile" class="section">
+        <div class="header"><h1>Profile</h1></div>
+        <div class="cards">
+            <div class="card"><h3><i class="fas fa-user"></i> Name</h3><p>John Doe</p></div>
+            <div class="card"><h3><i class="fas fa-envelope"></i> Email</h3><p>johndoe@example.com</p></div>
+            <div class="card"><h3><i class="fas fa-phone"></i> Phone</h3><p>+91 9876543210</p></div>
+        </div>
+    </div>
+</div>
+
+<script>
+function showSection(sectionId) {
+    document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+    document.getElementById(sectionId).classList.add('active');
+    document.querySelectorAll('.sidebar a').forEach(link => link.classList.remove('active'));
+    event.currentTarget.classList.add('active');
+}
+
+// Chart.js for grades
+const ctx = document.getElementById('gradesChart').getContext('2d');
+new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: ['Mathematics', 'Physics', 'Computer Science'],
+        datasets: [{
+            label: 'Grades %',
+            data: [90, 85, 95],
+            backgroundColor: ['#198754','#0dcaf0','#ffc107'],
+            borderRadius: 8
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: { legend: { display: false } },
+        scales: { y: { beginAtZero: true, max: 100 } }
+    }
+});
+
+// Search courses
+function filterCourses() {
+    const input = document.getElementById('courseSearch').value.toLowerCase();
+    const cards = document.querySelectorAll('#coursesList .card');
+    cards.forEach(card => {
+        card.style.display = card.textContent.toLowerCase().includes(input) ? '' : 'none';
+    });
+}
+</script>
+</body>
+</html>

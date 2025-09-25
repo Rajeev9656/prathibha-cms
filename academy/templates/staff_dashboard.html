@@ -1,0 +1,321 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Staff Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding-top: 80px;
+      background: #f6f8fa;
+      color: #293656;
+      overflow-x: hidden;
+    }
+
+    /* Navbar */
+    .top-header {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background-color: #0d3b66;
+      box-shadow: 0 4px 14px rgba(30,36,48,0.11);
+      padding: 1rem 2.5rem;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 72px;
+      transition: background 0.3s ease;
+    }
+
+    .top-header:hover {
+      background-color: #0b3256;
+    }
+
+    .logo {
+      height: 58px;
+      width: auto;
+      filter: drop-shadow(0 2px 8px rgba(18,69,89,0.16));
+      background: white;
+      border-radius: 14px;
+      padding: 2px 8px;
+      margin-right: 22px;
+      transition: transform 0.3s ease;
+    }
+
+    .logo:hover {
+      transform: scale(1.05);
+    }
+
+    .navbar-brand {
+      font-weight: 700;
+      font-size: 1.3rem;
+      color: #fff;
+      letter-spacing: 1.2px;
+      margin-right: 22px;
+      text-shadow: 0 1px 5px rgba(32,38,56,0.11);
+      transition: color 0.3s ease;
+    }
+
+    .navbar-brand:hover {
+      color: #ffc107;
+    }
+
+    .nav-user {
+      color: #ffeaba;
+      font-weight: 500;
+      font-size: 1.08rem;
+    }
+
+    .btn-glass-sm {
+      border-radius: 32px;
+      padding: 6px 16px;
+      background: rgba(255,255,255,0.17);
+      color: #ffd36e;
+      border: 1px solid rgba(255,255,255,0.25);
+      transition: all 0.3s ease;
+    }
+
+    .btn-glass-sm:hover {
+      background: #124559;
+      color: #ffc107;
+      transform: scale(1.05);
+    }
+
+    /* Container and cards */
+    .container {
+      max-width: 1200px;
+      margin: 36px auto 30px auto;
+      padding: 0 12px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 6px 18px rgba(18,69,89,0.07);
+      margin-bottom: 30px;
+      border: none;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInUp 0.8s forwards;
+    }
+
+    .card:nth-child(1) { animation-delay: 0.1s; }
+    .card:nth-child(2) { animation-delay: 0.2s; }
+    .card:nth-child(3) { animation-delay: 0.3s; }
+    .card:nth-child(4) { animation-delay: 0.4s; }
+
+    @keyframes fadeInUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .section-header h2 {
+      font-weight: 700;
+      font-size: 1.3rem;
+      margin: 0;
+      color: #124559;
+      letter-spacing: 1px;
+      text-shadow: 0 1px 2px rgba(18,69,89,0.09);
+    }
+
+    .section-header .small {
+      color: #3f566e;
+      font-size: .97rem;
+      opacity: 0.81;
+      margin-top: 2px;
+      margin-bottom: 8px;
+    }
+
+    /* Tables */
+    .table-small {
+      width: 100%;
+      border-collapse: collapse;
+      border-radius: 10px;
+      overflow: hidden;
+      background: #fdfdfd;
+      font-size: 1.07rem;
+      box-shadow: 0 1px 8px rgba(18,69,89,0.09);
+    }
+
+    .table-small th {
+      background: linear-gradient(90deg,#0d3b66 70%,#183a47 100%);
+      color: #fff;
+      font-weight: 600;
+      border-bottom: 1px solid #eee;
+      padding: 12px 8px;
+      letter-spacing: 0.5px;
+    }
+
+    .table-small td {
+      padding: 11px 7px;
+      text-align: left;
+      border-bottom: 1px solid #eef2f5;
+      color: #293656;
+      background: #fcfcfc;
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+
+    .table-small tr:hover td {
+      background: #e9f1f7;
+      transform: scale(1.02);
+    }
+
+    /* Footer */
+    footer {
+      background-color: #0d3b66;
+      color: #ffe9a1;
+      padding: 18px 0 10px;
+      font-size: 1rem;
+      text-align: center;
+      margin-top: 0;
+      transition: background 0.3s ease;
+    }
+
+    footer:hover {
+      background-color: #0b3256;
+    }
+
+    /* Responsive */
+    @media (max-width: 800px) {
+      .container { max-width: 98vw; padding: 0 3vw; }
+      .top-header { padding: 1rem 0.7rem; }
+      .logo { height: 43px; }
+      .section-header h2 { font-size: 1.13rem; }
+      .card { padding: 15px; }
+      .table-small th, .table-small td { padding: 7px 5px; font-size: 0.95rem; }
+    }
+
+    @media (max-width: 550px) {
+      .top-header { flex-direction: column; min-height: 90px; }
+      .navbar-brand, .nav-user { margin-right: 0; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<header class="top-header">
+  <div style="display:flex;align-items:center;">
+    <img src="{% static 'images/logo_c.png' %}" alt="Prathibha College Logo" class="logo" />
+    <span class="navbar-brand">Prathibha College — Staff Dashboard</span>
+  </div>
+  <div style="display:flex;align-items:center;gap:15px;">
+    <span class="nav-user">Hello, {{ user.first_name|default:user.username }}</span>
+    <a href="{% url 'logout' %}" class="btn-glass-sm">Logout</a>
+  </div>
+</header>
+
+<main class="container">
+
+  <!-- Today's Schedule -->
+  <div class="card">
+    <div class="section-header">
+      <h2>Today's Schedule</h2>
+      <div class="small">Classes and links</div>
+    </div>
+    <table class="table-small">
+      <thead>
+        <tr><th>Time</th><th>Batch</th><th>Topic</th><th>Room/Link</th></tr>
+      </thead>
+      <tbody>
+        {% for cls in today_schedule %}
+        <tr>
+          <td>{{ cls.time }}</td>
+          <td>{{ cls.batch }}</td>
+          <td>{{ cls.topic }}</td>
+          <td>{{ cls.room }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="4">No classes scheduled for today.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Upcoming Week -->
+  <div class="card">
+    <div class="section-header">
+      <h2>Upcoming Week</h2>
+      <div class="small">Next 7 days classes</div>
+    </div>
+    <table class="table-small">
+      <thead>
+        <tr><th>Date</th><th>Batch</th><th>Topic</th><th>Room/Link</th></tr>
+      </thead>
+      <tbody>
+        {% for cls in week_schedule %}
+        <tr>
+          <td>{{ cls.date }}</td>
+          <td>{{ cls.batch }}</td>
+          <td>{{ cls.topic }}</td>
+          <td>{{ cls.room }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="4">No scheduled classes this week.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Upcoming Exams -->
+  <div class="card">
+    <div class="section-header">
+      <h2>Upcoming Exams</h2>
+      <div class="small">Exam dates & timings</div>
+    </div>
+    <table class="table-small">
+      <thead>
+        <tr><th>Subject</th><th>Date</th><th>Time</th></tr>
+      </thead>
+      <tbody>
+        {% for exam in exams %}
+        <tr>
+          <td>{{ exam.subject }}</td>
+          <td>{{ exam.date }}</td>
+          <td>{{ exam.time }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="3">No upcoming exams.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Announcements & Events -->
+  <div class="card">
+    <div class="section-header">
+      <h2>Announcements & Events</h2>
+      <div class="small">Upcoming events & notices</div>
+    </div>
+    <table class="table-small">
+      <thead>
+        <tr><th>Title</th><th>Date</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        {% for event in events %}
+        <tr>
+          <td>{{ event.title }}</td>
+          <td>{{ event.date }}</td>
+          <td>{{ event.description }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="3">No upcoming events.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+</main>
+
+<footer>
+  &copy; {{ now|date:"Y" }} <strong>Prathibha College</strong>. All Rights Reserved.
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
