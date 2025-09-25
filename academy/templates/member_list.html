@@ -161,9 +161,8 @@ tr:hover {
     <table id="membersTable" class="table table-bordered table-striped">
       <thead>
         <tr>
-          <th>Full Name</th>
-          <th>Age</th>
-          <th>DOB</th>
+          <th>First Name</th>
+          <th>Last Name</th>
           <th>Phone</th>
           <th>Email</th>
           <th>Place</th>
@@ -174,20 +173,19 @@ tr:hover {
         </tr>
       </thead>
       <tbody>
-        {% if members.exists %}
-          {% for member in members %}
+        {% if students.exists %}
+          {% for member in students %}
           <tr>
-            <td>{{ member.full_name }}</td>
-            <td>{{ member.age }}</td>
-            <td>{{ member.dob|date:"Y-m-d" }}</td>
-            <td>{{ member.phone }}</td>
+            <td>{{ member.first_name }}</td>
+            <td>{{ member.last_name }}</td>
+            <td>{{ member.tel }}</td>
             <td>{{ member.email }}</td>
             <td>{{ member.place }}</td>
             <td>{{ member.batch }}</td>
             <td>{{ member.date_joined|date:"Y-m-d" }}</td>
             <td>
               {% if request.session.tutor_logged_in %}
-                <form action="{% url 'update_fees' member.id %}" method="POST">
+                <form action="" method="POST">
                   {% csrf_token %}
                   <select name="fees_paid" onchange="this.form.submit()">
                     <option value="True" {% if member.fees_paid %}selected{% endif %}>Paid</option>
@@ -199,8 +197,8 @@ tr:hover {
               {% endif %}
             </td>
             <td>
-              <a href="{% url 'edit_member' member.id %}" class="btn btn-sm btn-warning">Edit</a>
-              <a href="{% url 'delete_member' member.id %}" class="btn btn-sm btn-danger"
+              <a href="" class="btn btn-sm btn-warning">Edit</a>
+              <a href="" class="btn btn-sm btn-danger"
                  onclick="return confirm('Are you sure you want to delete {{ member.full_name }}?');">
                  Delete
               </a>

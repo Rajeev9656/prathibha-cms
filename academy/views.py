@@ -21,6 +21,7 @@ def batches(request):
     return render(request, 'batches.html')
 
 def member_list(request):
+    students = User.objects.filter(is_staff=False, is_superuser=False)
     return render(request, 'students_details.html')
 
 def staff_dashboard(request):
@@ -28,7 +29,8 @@ def staff_dashboard(request):
 
 
 def students_details(request):
-    return render(request, 'member_list.html')
+    students = User.objects.filter(is_staff=False, is_superuser=False)
+    return render(request, 'member_list.html',context={'students':students})
 
 
 # ---------- Unified Login ----------
