@@ -229,3 +229,8 @@ def schedule_management(request):
         "exams": exams,
         "events": events,
     })
+
+
+
+
+
