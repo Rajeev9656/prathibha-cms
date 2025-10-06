@@ -32,7 +32,7 @@ def member_list(request):
 
 def student_dashboard(request):
     classes = ClassSchedule.objects.all().order_by('date', 'time')
-    exams = Exam.objects.all().order_by('date', 'time')
+    exams = ExamSchedule.objects.all().order_by('date', 'time')
     events = Event.objects.all().order_by('date')
     return render(request, 'student_dashboard.html', {
         'classes': classes,
@@ -183,38 +183,39 @@ from .models import ClassSchedule, ExamSchedule, Event
 
 def schedule_management(request):
     if request.method == "POST":
-        # Identify which form is submitted
-        if 'topic' in request.POST:
-            # Add Class
+        form_type = request.POST.get("form_type")
+
+        if form_type == "class":
             ClassSchedule.objects.create(
-                batch=request.POST.get('batch'),
-                topic=request.POST.get('topic'),
-                date=request.POST.get('date'),
-                time=request.POST.get('time'),
-                room=request.POST.get('room')
+                batch=request.POST["batch"],
+                topic=request.POST["topic"],
+                date=request.POST["date"],
+                time=request.POST["time"],
+                room_or_link=request.POST.get("room_or_link", "")
             )
-        elif 'subject' in request.POST:
-            # Add Exam
+
+        elif form_type == "exam":
             ExamSchedule.objects.create(
-                subject=request.POST.get('subject'),
-                date=request.POST.get('date'),
-                time=request.POST.get('time')
+                subject=request.POST["subject"],
+                date=request.POST["date"],
+                time=request.POST["time"]
             )
-        elif 'title' in request.POST:
-            # Add Event
+
+        elif form_type == "event":
             Event.objects.create(
-                title=request.POST.get('title'),
-                description=request.POST.get('description'),
-                date=request.POST.get('date')
+                title=request.POST["title"],
+                description=request.POST.get("description", ""),
+                date=request.POST["date"]
             )
-        return redirect('schedule')
 
-    classes = ClassSchedule.objects.all().order_by('date', 'time')
-    exams = ExamSchedule.objects.all().order_by('date', 'time')
-    events = Event.objects.all().order_by('date')
+        return redirect("schedule")
 
-    return render(request, 'schedule.html', {
-        'classes': classes,
-        'exams': exams,
-        'events': events
+    classes = ClassSchedule.objects.all().order_by("date", "time")
+    exams = ExamSchedule.objects.all().order_by("date", "time")
+    events = Event.objects.all().order_by("date")
+
+    return render(request, "schedule.html", {
+        "classes": classes,
+        "exams": exams,
+        "events": events,
     })

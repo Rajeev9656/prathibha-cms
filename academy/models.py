@@ -1,5 +1,6 @@
 from django.db import models
 from datetime import date
+import datetime
 
 batch_choices = [
     ('Day Batch', 'Day Batch'),
@@ -34,8 +35,8 @@ class Student(models.Model):
 class ClassSchedule(models.Model):
     batch = models.CharField(max_length=100)
     topic = models.CharField(max_length=200)
-    date = models.DateField()
-    time = models.TimeField()
+    date = models.DateField(default=datetime.date.today)  # <-- default added
+    time = models.TimeField(default=datetime.time(9, 0))
     room_or_link = models.CharField(max_length=255, blank=True)
 
     def __str__(self):
@@ -44,8 +45,8 @@ class ClassSchedule(models.Model):
 
 class ExamSchedule(models.Model):  # ← THIS MODEL MUST EXIST
     subject = models.CharField(max_length=200)
-    date = models.DateField()
-    time = models.TimeField()
+    date = models.DateField(default=datetime.date.today)  # <-- default added
+    time = models.TimeField(default=datetime.time(10, 0)) 
 
     def __str__(self):
         return self.subject
