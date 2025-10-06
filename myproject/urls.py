@@ -39,7 +39,7 @@ urlpatterns = [
     path("staff/", views.staff, name="staff"),
     path('add-staff/', views.add_staff, name='add_staff'),
     path("staff-dashboard/", views.staff_dashboard, name="staff_dashboard"),
-    path('schedule/', views.schedule_view, name='schedule'), 
+    path('schedule/', views.schedule_management, name='schedule'), 
     path('students/', views.students_details, name='students_details'),
     path('student/edit/<int:student_id>/', views.edit_student, name='edit_student'),
 ]

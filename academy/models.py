@@ -32,18 +32,29 @@ class Student(models.Model):
 
 
 class ClassSchedule(models.Model):
-    batch = models.CharField(max_length=50, choices=batch_choices)
+    batch = models.CharField(max_length=100)
     topic = models.CharField(max_length=200)
     date = models.DateField()
     time = models.TimeField()
-    room_or_link = models.CharField(max_length=200, blank=True, null=True)
+    room_or_link = models.CharField(max_length=255, blank=True)
 
-class Exam(models.Model):
+    def __str__(self):
+        return f"{self.topic} ({self.batch})"
+
+
+class ExamSchedule(models.Model):  # ← THIS MODEL MUST EXIST
     subject = models.CharField(max_length=200)
     date = models.DateField()
     time = models.TimeField()
+
+    def __str__(self):
+        return self.subject
+
 
 class Event(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField(blank=True)
     date = models.DateField()
+
+    def __str__(self):
+        return self.title
