@@ -4,6 +4,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from .models import Student
 from .models import ClassSchedule, ExamSchedule, Event
+from django.contrib.auth.hashers import make_password,check_password
+from .models import Student, Staff
 
 
 # ---------- Dashboards ----------
@@ -19,9 +21,6 @@ def staff(request):
 
 def staff_dashboard(request):
     return render(request, "staff_dashboard.html")
-
-def student_dashboard(request):
-    return render(request, 'student_dashboard.html')
 
 def batches(request):
     return render(request, 'batches.html')
@@ -53,21 +52,28 @@ def unified_login(request):
         username = request.POST.get("username")
         password = request.POST.get("password")
 
+        # 1️⃣ Check Django User first (Admin/Staff)
         user = authenticate(request, username=username, password=password)
-
         if user is not None:
             login(request, user)
+            if user.is_superuser:
+                return redirect("tutor_dashboard")
+            elif user.is_staff:
+                return redirect("staff_dashboard")
 
-            # ✅ Check role and redirect
-            if user.is_superuser:  
-                return redirect("tutor_dashboard")     # Admin
-            elif user.is_staff:  
-                return redirect("staff_dashboard")     # Staff/Tutor
-            else:  
-                return redirect("student_dashboard")   # Student
+        # 2️⃣ If not found, check Student table
+        try:
+            student = Student.objects.get(username=username)
+            if check_password(password, student.password):
+                request.session['student_id'] = student.id
+                return redirect("student_dashboard")
+            else:
+                messages.error(request, "Invalid student password.")
+        except Student.DoesNotExist:
+            pass
 
-        else:
-            messages.error(request, "Invalid username or password.")
+        # 3️⃣ If not found anywhere
+        messages.error(request, "Invalid username or password.")
 
     return render(request, "login.html")
 
@@ -107,7 +113,7 @@ def member_register(request):
             state=state,
             zip=zip_code,
             username=username,
-            password=password  # For real apps, always hash passwords!
+            password=make_password(password)  # 🔒 hash password
         )
 
         messages.success(request, "Student registered successfully!")
@@ -119,33 +125,37 @@ def member_register(request):
 
 
 # ---------- Add Staff (by Admin only) ----------
+from django.contrib.auth.models import User
+from django.contrib import messages
+from django.shortcuts import render, redirect
+
 def add_staff(request):
     if request.method == "POST":
-        first_name = request.POST.get("first_name")
-        last_name = request.POST.get("last_name")
-        email = request.POST.get("email")
         username = request.POST.get("username")
         password = request.POST.get("password")
+        email = request.POST.get("email")
+        first_name = request.POST.get("first_name")
+        last_name = request.POST.get("last_name")
 
+        # ✅ Check if the username already exists
         if User.objects.filter(username=username).exists():
-            messages.error(request, "Username already taken.")
-        else:
-            user = User.objects.create_user(
-                username=username,
-                password=password,
-                email=email,
-                first_name=first_name,
-                last_name=last_name
-            )
-            # 👇 Make staff
-            user.is_staff = True
-            user.is_superuser = False
-            user.save()
+            messages.error(request, "Username already exists. Please choose another one.")
+            return redirect("add_staff")
 
-            messages.success(request, "Staff added successfully!")
-            return redirect('staff_dashboard')
+        # Create the staff user
+        user = User.objects.create_user(
+            username=username,
+            password=password,
+            email=email,
+            first_name=first_name,
+            last_name=last_name,
+            is_staff=True,  # gives access to staff dashboard
+        )
 
-    return render(request, 'add_staff.html')
+        messages.success(request, f"Staff member {username} added successfully.")
+        return redirect("tutor_dashboard")
+
+    return render(request, "add_staff.html")
 
 def schedule_view(request):
     # You can pass context like classes, events, exams if needed

@@ -224,7 +224,7 @@
   <div class="login-wrapper">
     <div class="login-card" role="main" aria-label="Tutor login form">
       <h2>Login</h2>
-      <form method="post" novalidate>
+      <form method="post" action="{% url 'login' %}" novalidate>
         {% csrf_token %}
         <div class="form-group">
           <input type="text" name="username" placeholder=" " required />

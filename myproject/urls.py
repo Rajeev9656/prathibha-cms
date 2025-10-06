@@ -24,22 +24,28 @@ urlpatterns = [
 
     # Main pages
     path('', views.home, name='home'),
-    path('batches', views.batches, name='batches'),
-    path('members', views.member_list, name='member_list'),
+    path('batches/', views.batches, name='batches'),
+    path('members/', views.member_list, name='member_list'),
 
     # Dashboards
-    path('tutor-dashboard', views.admin_dashboard, name='tutor_dashboard'),
-    path('student-dashboard', views.student_dashboard, name='student_dashboard'),
+    path('tutor-dashboard/', views.admin_dashboard, name='tutor_dashboard'),
+    path('staff-dashboard/', views.staff_dashboard, name='staff_dashboard'),
+    path('student-dashboard/', views.student_dashboard, name='student_dashboard'),
 
-    # Authentication (names as per home.html)
-    path('login', views.unified_login, name='login'),
-    path("register", views.member_register, name="member_registration"),
+    # Authentication
+    path('login/', views.unified_login, name='login'),
+    path('register/', views.member_register, name='member_registration'),
     path('logout/', views.user_logout, name='logout'),
+
+    # Students
     path('students-details/', views.students_details, name='students_details'),
-    path("staff/", views.staff, name="staff"),
-    path('add-staff/', views.add_staff, name='add_staff'),
-    path("staff-dashboard/", views.staff_dashboard, name="staff_dashboard"),
-    path('schedule/', views.schedule_management, name='schedule'), 
-    path('students/', views.students_details, name='students_details'),
     path('student/edit/<int:student_id>/', views.edit_student, name='edit_student'),
+
+    # Staff
+    path('add-staff/', views.add_staff, name='add_staff'),
+    path("staff/", views.staff, name="staff"),
+
+
+    # Schedule
+    path('schedule/', views.schedule_management, name='schedule'),
 ]
